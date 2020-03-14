@@ -37,27 +37,23 @@ w = np.ravel(w)
 
 # A priori estimation
 apr = (w.T@cov@w)/w.size
-
 n_cov = apr*cov
 
 
 # 95% Confidence interval misclosure test:
-
-
+variance = np.diag(n_cov)
+compare = np.less_equal(w,1.96*variance)
+compare = np.reshape(compare,[21,3])
+print(compare)
 
 
 # Chi squared test
-
-
-
 for i in range(0,62,3):
     w_i = np.array([w[i], w[i+1], w[i+2]])
     cov_i = cov[i:i+3,i:i+3]
     val = w_i.T@cov_i@w_i
     if val > 1.82:
-    print(val)
-
-
+        val = 1
 
 
 
