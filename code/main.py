@@ -6,8 +6,8 @@ from scipy.linalg import block_diag
 data = pd.read_csv(r'C:/Users/jcdav/Documents/GitHub/ODS-lab-05/code/The data for #5.csv')
 data = np.array(data)
 d = np.array(data[1:48,2:11],dtype=float)
-f = np.array(data[:,0],dtype=str)
-t = np.array(data[:,1],dtype=str)
+f = np.array(data[1:48,0],dtype=str)
+t = np.array(data[1:48,1],dtype=str)
 
 
 # Misclosure Matrix and Covariance
@@ -42,17 +42,17 @@ n_cov = apr*cov
 
 # 95% Confidence interval misclosure test:
 variance = np.diag(n_cov)
-compare = np.less_equal(w,1.96*variance)
-compare = np.reshape(compare,[21,3])
+compare = np.less_equal(w,1.96*variance) # Test if values are less than 196σ
+compare = np.reshape(compare,[22,3])
 
 
 val = [];
 # Chi squared test
 for i in range(0,62,3):
     w_i = np.array([w[i], w[i+1], w[i+2]])
-    cov_i = cov[i:i+3,i:i+3]
+    cov_i = n_cov[i:i+3,i:i+3]
     val.append(w_i.T@cov_i@w_i)
 val = np.ravel(val)
 compare1 = np.less_equal(val,1.82)
-#print(val)
+
 
