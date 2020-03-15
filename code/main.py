@@ -16,19 +16,19 @@ count = 0
 cov = np.array([])
 
 for i in range (47):
-    base_i = d[i,2:5]
+    base_i = d[i,0:3]
     cov_i = np.array([[d[i,3],d[i,4],d[i,5]],[d[i,4],d[i,6],d[i,7]],[d[i,5],d[i,7],d[i,8]]])
     for j in range (i+1,47):
-        base_j = d[j,2:5]
+        base_j = d[j,0:3]
         cov_j = np.array([[d[j,3],d[j,4],d[j,5]],[d[j,4],d[j,6],d[j,7]],[d[j,5],d[j,7],d[j,8]]])
         f_val = f[j]
         t_val = t[j]
         if f_val == f[i] and t_val == t[i]:
-            w.append(base_i + base_j)  
+            w.append(base_i - base_j)  
             cov_val = cov_i + cov_j
             cov = block_diag(cov,cov_val)
         elif f_val == t[i] and t_val == f[i]:
-            w.append(base_i - base_j)
+            w.append(base_i + base_j)
             cov_val = cov_i + cov_j
             cov = block_diag(cov,cov_val)
             
@@ -44,16 +44,15 @@ n_cov = apr*cov
 variance = np.diag(n_cov)
 compare = np.less_equal(w,1.96*variance)
 compare = np.reshape(compare,[21,3])
-print(compare)
 
 
+val = [];
 # Chi squared test
 for i in range(0,62,3):
     w_i = np.array([w[i], w[i+1], w[i+2]])
     cov_i = cov[i:i+3,i:i+3]
-    val = w_i.T@cov_i@w_i
-    if val > 1.82:
-        val = 1
-
-
+    val.append(w_i.T@cov_i@w_i)
+val = np.ravel(val)
+compare1 = np.less_equal(val,1.82)
+#print(val)
 
